@@ -3,11 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TodoSonya</title>
+    <title>Taskerio</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/reset.css">
 </head>
 <body>
-<div></div>
+    <h1>Планировщик задач</h1>
+    <div class="task-form">
+        <input type="text" id="taskName" placeholder="Название задачи" required>
+        <textarea id="taskDescription" placeholder="Описание задачи" required></textarea>
+        <input type="datetime-local" id="startTime" required>
+        <input type="datetime-local" id="endTime" required>
+        <button id="addTaskButton">Добавить задачу</button>
+    </div>
+
+    <div class="kanban-board">
+        <div class="column" id="planned">
+            <h2>Запланированные</h2>
+            <div class="tasks"></div>
+        </div>
+        <div class="column" id="completed">
+            <h2>Завершено</h2>
+            <div class="tasks"></div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h2>Редактировать задачу</h2>
+            <form id="editForm">
+                <input type="text" id="editName" placeholder="Название задачи" required />
+                <textarea id="editDescription" placeholder="Описание задачи" required></textarea>
+                <input type="datetime-local" id="editStartTime" required />
+                <input type="datetime-local" id="editEndTime" required />
+                <button type="submit">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/scripts/script.js"></script>
 </body>
 </html>
