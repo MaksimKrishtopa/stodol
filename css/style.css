@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+body {
+    font-family: "Roboto", sans-serif; 
+}
 
 h1 {
     text-align: center;
@@ -24,24 +30,13 @@ h1 {
     margin: 5px 0;
 }
 
+.task p:first-child {
+    font-weight: 700;
+}
+
 .task {
-    max-width: 100%; 
-}
-
-.task button.edit-button {
-    background-color: #f0ad4e;
-}
-
-.task button.edit-button:hover {
-    background-color: #ec971f;
-}
-
-.task button.delete-button {
-    background-color: #d9534f;
-}
-
-.task button.delete-button:hover {
-    background-color: #c9302c;
+    max-width: 100%;
+ 
 }
 
 .task-form input, 
@@ -56,28 +51,31 @@ h1 {
 }
 
 .task-form button {
-    background-color: #5cb85c;
-    color: white;
+    color: #343434;
     cursor: pointer;
 }
 
-.task-form button:hover {
-    background-color: #4cae4c;
-}
-
-.kanban-board {
+.board {
     display: flex;
     justify-content: space-around;
     padding: 20px;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Roboto", sans-serif;
+    gap: 25px; 
 }
 
 .column {
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 30%;
+    width: 100%;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .column h2 {
@@ -86,33 +84,54 @@ h1 {
 }
 
 .tasks {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .task {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
     display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     flex-direction: column;
-    gap: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    max-width: 350px;
+    height: 175px; 
+    overflow: hidden; 
 }
 
-.task button {
-    align-self: flex-end;
-    background-color: #007bff;
-    color: white;
+.task__text p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Ограничиваем описание тремя строками */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Добавляем троеточие */
+}
+.task__text {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.task__btns {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px; /* Расстояние между кнопками */
+}
+
+.task__btns button {
     padding: 5px 10px;
-    border: none;
-    border-radius: 3px;
+    font-size: 14px;
     cursor: pointer;
-}
-
-.task button:hover {
-    background-color: #0056b3;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+    transition: background-color 0.3s;
 }
 
 
@@ -173,5 +192,33 @@ h1 {
     background-color: #4cae4c;
 }
 
+
+
+.task__btns button {
+    background: none; /* Убираем фон */
+    border: none;     /* Убираем рамку */
+    padding: 0;       /* Убираем внутренние отступы */
+    margin: 0;        /* Убираем внешние отступы */
+    font-size: 18px;  /* Устанавливаем размер текста */
+    cursor: pointer;  /* Указываем, что это кнопка */
+    color: #616161;      /* Цвет текста */
+}
+
+.task__btns button:hover {
+    color: #000; /* Более тёмный цвет при наведении */
+}
+
+.task__btns {
+    gap: 15px;
+}
+
+.task__btns button {
+    font-size: 22px;
+}
+
+
+.edit-button {
+    transform: scaleX(-1); /* Отзеркаливание */
+}
 
 
