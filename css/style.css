@@ -221,4 +221,21 @@ h1 {
     transform: scaleX(-1); /* Отзеркаливание */
 }
 
+.task.important {
+    background-color: #fff8a6;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
 
+.important-button {
+    color: gold;
+    font-size: 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.important-button:hover {
+    transform: scale(1.2);
+}

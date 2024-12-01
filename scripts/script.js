@@ -12,19 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentTask = null;
 
     // Загрузка задач из localStorage
-    function loadTasks() {
-        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-        tasks.forEach(task => {
-            const taskElement = createTask(task.name, task.description, task.startTime, task.endTime, task.status);
-            if (task.status === "completed") {
-                completedColumn.appendChild(taskElement);
-            } else {
-                plannedColumn.appendChild(taskElement);
-            }
-        });
-    }
-
-    // Сохранение задач в localStorage
     function saveTasks() {
         const tasks = [];
         const allTasks = document.querySelectorAll(".task");
@@ -32,13 +19,28 @@ document.addEventListener("DOMContentLoaded", () => {
             const task = {
                 name: taskElement.querySelector(".task__text p:first-child").textContent,
                 description: taskElement.querySelector(".task__text p:nth-child(2)").textContent,
-                startTime: taskElement.querySelector(".task__date").dataset.startTime,  // Сохраняем startTime в атрибуте
-                endTime: taskElement.querySelector(".task__date").dataset.endTime,  // Сохраняем endTime в атрибуте
-                status: taskElement.closest(".column").id === "completed" ? "completed" : "planned"
+                startTime: taskElement.querySelector(".task__date").dataset.startTime,
+                endTime: taskElement.querySelector(".task__date").dataset.endTime,
+                status: taskElement.closest(".column").id === "completed" ? "completed" : "planned",
+                important: taskElement.classList.contains("important") // Сохраняем важность
             };
             tasks.push(task);
         });
         localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    // Загрузка задач с важностью
+    function loadTasks() {
+        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        tasks.forEach(task => {
+            const taskElement = createTask(task.name, task.description, task.startTime, task.endTime, task.status);
+            if (task.important && task.status === "planned") taskElement.classList.add("important"); // Подсветка только в запланированных
+            if (task.status === "completed") {
+                completedColumn.appendChild(taskElement);
+            } else {
+                plannedColumn.appendChild(taskElement);
+            }
+        });
     }
 
     // Обработчик добавления задачи
@@ -83,52 +85,76 @@ document.addEventListener("DOMContentLoaded", () => {
     function createTask(name, description, startTime, endTime, status) {
         const task = document.createElement("div");
         task.className = "task";
-
+    
         const taskText = document.createElement("div");
         taskText.className = "task__text";
-
+    
         const taskNameElem = document.createElement("p");
         taskNameElem.textContent = name;
-
+    
         const taskDescriptionElem = document.createElement("p");
         taskDescriptionElem.textContent = description;
-
+    
         const taskDateElem = document.createElement("p");
         taskDateElem.className = "task__date";
         taskDateElem.textContent = `${formatDateTime(startTime)} - ${formatDateTime(endTime)}`;
-
+    
         // Добавление атрибутов для хранения данных
-        taskDateElem.dataset.startTime = startTime;  // Храним startTime как data-атрибут
-        taskDateElem.dataset.endTime = endTime;  // Храним endTime как data-атрибут
-
+        taskDateElem.dataset.startTime = startTime;
+        taskDateElem.dataset.endTime = endTime;
+    
         taskText.append(taskNameElem, taskDescriptionElem, taskDateElem);
-
+    
         const taskBtns = document.createElement("div");
         taskBtns.className = "task__btns";
-
+    
+        const importantButton = document.createElement("button");
+        importantButton.className = "important-button";
+        importantButton.innerHTML = "★";
+    
         const moveButton = document.createElement("button");
         moveButton.className = "move-button";
         moveButton.innerHTML = "✔";
-
+    
         const editButton = document.createElement("button");
         editButton.className = "edit-button";
         editButton.innerHTML = "✎";
-
+    
         const deleteButton = document.createElement("button");
         deleteButton.className = "delete-button";
         deleteButton.innerHTML = "✕";
-
-        taskBtns.append(moveButton, editButton, deleteButton);
+    
+        // В зависимости от статуса задачи добавляем кнопки
+        if (status === "completed") {
+            taskBtns.append(deleteButton); // Только кнопка удаления для завершённых задач
+        } else {
+            taskBtns.append(importantButton, moveButton, editButton, deleteButton); // Для запланированных - все кнопки
+        }
+    
         task.append(taskText, taskBtns);
-
-        // Перемещение задачи в "Завершено"
+    
+        // Подсветка важной задачи и возможность добавления в избранное только в запланированных
+        if (status === "planned") {
+            importantButton.addEventListener("click", () => {
+                task.classList.toggle("important");
+                saveTasks(); // Сохранение задачи с обновленным состоянием
+            });
+        } else {
+            // Убираем кнопку важности для завершённых задач
+            importantButton.style.display = "none";
+        }
+    
+        // Перемещение задачи в завершённые
         moveButton.addEventListener("click", () => {
-            completedColumn.appendChild(task);
+            // Убираем возможность добавления в избранное и перемещения задачи для завершённых
+            task.classList.remove("important");
+            importantButton.style.display = "none";
             moveButton.remove();
             editButton.remove();
-            saveTasks(); // Сохранение задач после перемещения
+            completedColumn.appendChild(task);
+            saveTasks();
         });
-
+    
         // Редактирование задачи
         editButton.addEventListener("click", () => {
             currentTask = task;
@@ -138,13 +164,13 @@ document.addEventListener("DOMContentLoaded", () => {
             editEndTime.value = endTime;
             editModal.style.display = "block";
         });
-
+    
         // Удаление задачи
         deleteButton.addEventListener("click", () => {
             task.remove();
-            saveTasks(); // Сохранение задач после удаления
+            saveTasks();
         });
-
+    
         return task;
     }
 
