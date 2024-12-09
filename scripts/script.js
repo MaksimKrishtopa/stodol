@@ -32,16 +32,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
-    // Функция для форматирования даты и времени
     function formatDateTime(dateTime) {
         const date = new Date(dateTime);
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate();
+        const monthNames = [
+            "января", "февраля", "марта", "апреля", "мая", "июня",
+            "июля", "августа", "сентября", "октября", "ноября", "декабря"
+        ];
+        const month = monthNames[date.getMonth()];
         const year = date.getFullYear();
-        return `${day}.${month}.${year} ${hours}:${minutes}`;
+        return `${day} ${month} ${hours}:${minutes}`;
     }
+    
 
     // Загрузка задач
     function loadTasks() {
@@ -84,48 +88,47 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem(`tasks_${currentUser.email}`, JSON.stringify(tasks));
     }
 
-    // Функция для создания задачи
     function createTask(name, description, startTime, endTime, status) {
         const task = document.createElement("div");
         task.className = "task";
-
+    
         const taskText = document.createElement("div");
         taskText.className = "task__text";
-
+    
         const taskNameElem = document.createElement("p");
         taskNameElem.textContent = name;
-
+    
         const taskDescriptionElem = document.createElement("p");
         taskDescriptionElem.textContent = description;
-
+    
         const taskDateElem = document.createElement("p");
         taskDateElem.className = "task__date";
         taskDateElem.textContent = `${formatDateTime(startTime)} - ${formatDateTime(endTime)}`;
-
+    
         taskDateElem.dataset.startTime = startTime;
         taskDateElem.dataset.endTime = endTime;
-
+    
         taskText.append(taskNameElem, taskDescriptionElem, taskDateElem);
-
+    
         const taskBtns = document.createElement("div");
         taskBtns.className = "task__btns";
-
+    
         const importantButton = document.createElement("button");
         importantButton.className = "important-button";
         importantButton.innerHTML = "★";
-
+    
         const moveButton = document.createElement("button");
         moveButton.className = "move-button";
         moveButton.innerHTML = "✔";
-
+    
         const editButton = document.createElement("button");
         editButton.className = "edit-button";
         editButton.innerHTML = "✎";
-
+    
         const deleteButton = document.createElement("button");
         deleteButton.className = "delete-button";
         deleteButton.innerHTML = "✕";
-
+    
         if (status === "completed") {
             taskBtns.append(deleteButton);
         } else {
@@ -169,21 +172,33 @@ document.addEventListener("DOMContentLoaded", () => {
     // Обработчик сохранения изменений в редактировании задачи
     editForm.addEventListener("submit", (e) => {
         e.preventDefault();
+    
+        const updatedName = editName.value;
+        const updatedDescription = editDescription.value;
+        const updatedStartTime = editStartTime.value;
+        const updatedEndTime = editEndTime.value;
+    
+        // Валидация дат
+        if (new Date(updatedStartTime) > new Date(updatedEndTime)) {
+            alert("Дата начала выполнения не может быть позже даты окончания выполнения!");
+            return;
+        }
+    
         const updatedTask = {
-            name: editName.value,
-            description: editDescription.value,
-            startTime: editStartTime.value,
-            endTime: editEndTime.value,
+            name: updatedName,
+            description: updatedDescription,
+            startTime: updatedStartTime,
+            endTime: updatedEndTime,
         };
-
+    
         currentTask.querySelector(".task__text p:first-child").textContent = updatedTask.name;
         currentTask.querySelector(".task__text p:nth-child(2)").textContent = updatedTask.description;
         currentTask.querySelector(".task__date").textContent = `${formatDateTime(updatedTask.startTime)} - ${formatDateTime(updatedTask.endTime)}`;
         currentTask.querySelector(".task__date").dataset.startTime = updatedTask.startTime;
         currentTask.querySelector(".task__date").dataset.endTime = updatedTask.endTime;
-
+    
         editModal.style.display = "none";
-
+    
         saveTasks();
     });
 
@@ -277,11 +292,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const taskDescription = document.getElementById("taskDescription").value;
         const startTime = document.getElementById("startTime").value;
         const endTime = document.getElementById("endTime").value;
-
+    
+        // Валидация дат
+        if (new Date(startTime) > new Date(endTime)) {
+            alert("Дата начала выполнения не может быть позже даты окончания выполнения!");
+            return;
+        }
+    
         if (taskName && taskDescription && startTime && endTime) {
             const taskElement = createTask(taskName, taskDescription, startTime, endTime, "planned");
             plannedColumn.appendChild(taskElement);
-
+    
             saveTasks();
         } else {
             alert("Пожалуйста, заполните все поля!");
