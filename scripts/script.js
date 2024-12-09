@@ -206,52 +206,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
     registerForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        
+    
         const users = JSON.parse(localStorage.getItem("users")) || [];
-        
-        // Проверяем, есть ли уже пользователь с таким email
         const existingUser = users.find(user => user.email === registerEmail.value);
-            
+    
         if (existingUser) {
             alert("Пользователь с таким email уже существует");
             return;
         }
-        
+    
         if (registerPassword.value === confirmPassword.value) {
             const user = {
                 email: registerEmail.value,
                 password: registerPassword.value,
             };
-        
-            // Добавляем нового пользователя в массив
+    
             users.push(user);
-        
-            // Сохраняем всех пользователей
             localStorage.setItem("users", JSON.stringify(users));
-        
+    
             currentUser = user;
             localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        
+    
             registerModal.style.display = "none";
+            registerButton.style.display = "none"; // Скрываем кнопку "регистрация"
             loginButton.style.display = "none";
             logoutButton.style.display = "inline-block";
-            taskForm.style.display = "flex";  // Меняем на "flex"
+            taskForm.style.display = "flex";
             loadTasks();
         } else {
             alert("Пароли не совпадают");
         }
     });
     
-    // Авторизация
     loginForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const users = JSON.parse(localStorage.getItem("users")) || [];
         const user = users.find(user => user.email === loginEmail.value && user.password === loginPassword.value);
+    
         if (user) {
             currentUser = user;
             localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    
             loginModal.style.display = "none";
             loginButton.style.display = "none";
+            registerButton.style.display = "none"; // Скрываем кнопку "регистрация"
             logoutButton.style.display = "inline-block";
             taskForm.style.display = "flex";
             loadTasks();
@@ -259,15 +257,15 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Неверный логин или пароль");
         }
     });
-
     // Выход
     logoutButton.addEventListener("click", () => {
         currentUser = null;
         localStorage.removeItem("currentUser");
         loginButton.style.display = "inline-block";
         logoutButton.style.display = "none";
+        registerButton.style.display = "inline-block"; // Показать кнопку "Регистрация"
         taskForm.style.display = "none";
-
+    
         // Очистить текущие задачи
         plannedColumn.innerHTML = '';
         completedColumn.innerHTML = '';
@@ -290,13 +288,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Загружаем задачи после авторизации
     if (currentUser) {
         loadTasks();
         loginButton.style.display = "none";
         logoutButton.style.display = "inline-block";
         taskForm.style.display = "flex";
+        registerButton.style.display = "none"; // Скрываем кнопку "Регистрация"
     } else {
         loginButton.style.display = "inline-block";
+        logoutButton.style.display = "none";
+        taskForm.style.display = "none";
+        registerButton.style.display = "inline-block"; // Показываем кнопку "Регистрация"
     }
+    
 });
