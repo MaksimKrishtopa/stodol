@@ -9,11 +9,14 @@
 </head>
 <body>
 
-
- 
-
     <h1>Планировщик задач</h1>
-    <div class="task-form">
+    <div class="auth-buttons">
+        <button id="loginButton" class="auth-button">Авторизация</button>
+        <button id="registerButton" class="auth-button">Регистрация</button>
+        <button id="logoutButton" class="auth-button" style="display: none;">Выход</button>
+    </div>
+
+    <div class="task-form" style="display: none;">
         <input type="text" id="taskName" placeholder="Название задачи" required>
         <textarea id="taskDescription" placeholder="Описание задачи" required></textarea>
         <input type="datetime-local" id="startTime" required>
@@ -27,8 +30,34 @@
             <div class="tasks"></div>
         </div>
         <div class="column" id="completed">
-            <h2>Завершено</h2>
+            <h2>Завершенные</h2>
             <div class="tasks"></div>
+        </div>
+    </div>
+
+    <!-- Модальные окна -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span id="closeRegisterModal" class="close">&times;</span>
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <input type="email" id="registerEmail" placeholder="Электронная почта" required />
+                <input type="password" id="registerPassword" placeholder="Пароль" required />
+                <input type="password" id="confirmPassword" placeholder="Подтвердите пароль" required />
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span id="closeLoginModal" class="close">&times;</span>
+            <h2>Авторизация</h2>
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Электронная почта" required />
+                <input type="password" id="loginPassword" placeholder="Пароль" required />
+                <button type="submit">Войти</button>
+            </form>
         </div>
     </div>
 
@@ -45,6 +74,7 @@
             </form>
         </div>
     </div>
+
     <script src="/scripts/script.js"></script>
 </body>
 </html>
