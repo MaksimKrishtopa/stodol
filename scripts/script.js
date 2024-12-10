@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("currentUser", JSON.stringify(currentUser));
     
             registerModal.style.display = "none";
-            registerButton.style.display = "none"; // Скрываем кнопку "регистрация"
+            registerButton.style.display = "none"; 
             loginButton.style.display = "none";
             logoutButton.style.display = "inline-block";
             taskForm.style.display = "flex";
@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
             loginModal.style.display = "none";
             loginButton.style.display = "none";
-            registerButton.style.display = "none"; // Скрываем кнопку "регистрация"
+            registerButton.style.display = "none"; 
             logoutButton.style.display = "inline-block";
             taskForm.style.display = "flex";
             loadTasks();
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("currentUser");
         loginButton.style.display = "inline-block";
         logoutButton.style.display = "none";
-        registerButton.style.display = "inline-block"; // Показать кнопку "Регистрация"
+        registerButton.style.display = "inline-block"; 
         taskForm.style.display = "none";
     
         // Очистить текущие задачи
@@ -314,12 +314,12 @@ document.addEventListener("DOMContentLoaded", () => {
         loginButton.style.display = "none";
         logoutButton.style.display = "inline-block";
         taskForm.style.display = "flex";
-        registerButton.style.display = "none"; // Скрываем кнопку "Регистрация"
+        registerButton.style.display = "none"; 
     } else {
         loginButton.style.display = "inline-block";
         logoutButton.style.display = "none";
         taskForm.style.display = "none";
-        registerButton.style.display = "inline-block"; // Показываем кнопку "Регистрация"
+        registerButton.style.display = "inline-block";
     }
     
 });

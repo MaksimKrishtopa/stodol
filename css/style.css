@@ -108,10 +108,10 @@ h1 {
 
 .task__text p {
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* Ограничиваем описание тремя строками */
+    -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis; /* Добавляем троеточие */
+    text-overflow: ellipsis; 
 }
 .task__text {
     flex: 1;
@@ -121,7 +121,7 @@ h1 {
 .task__btns {
     display: flex;
     align-items: flex-end;
-    gap: 10px; /* Расстояние между кнопками */
+    gap: 10px;
 }
 
 .task__btns button {
@@ -195,17 +195,17 @@ h1 {
 
 
 .task__btns button {
-    background: none; /* Убираем фон */
-    border: none;     /* Убираем рамку */
-    padding: 0;       /* Убираем внутренние отступы */
-    margin: 0;        /* Убираем внешние отступы */
-    font-size: 18px;  /* Устанавливаем размер текста */
-    cursor: pointer;  /* Указываем, что это кнопка */
-    color: #616161;      /* Цвет текста */
+    background: none; 
+    border: none;    
+    padding: 0;      
+    margin: 0;      
+    font-size: 18px;  
+    cursor: pointer;  
+    color: #616161;     
 }
 
 .task__btns button:hover {
-    color: #000; /* Более тёмный цвет при наведении */
+    color: #000; 
 }
 
 .task__btns {
@@ -218,7 +218,7 @@ h1 {
 
 
 .edit-button {
-    transform: scaleX(-1); /* Отзеркаливание */
+    transform: scaleX(-1); 
 }
 
 .task.important {
@@ -279,16 +279,16 @@ h1 {
 
 .header {
     display: flex;
-    justify-content: space-between; /* Размещает элементы по краям */
-    align-items: center; /* Выравнивание по вертикали */
-    padding: 10px 20px; /* Отступы сверху и по бокам */
-    background-color: #f9f9f9; /* Цвет фона */
-    border-bottom: 1px solid #ccc; /* Разделительная линия */
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px 20px; 
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ccc; 
 }
 
 .auth-buttons {
     display: flex;
-    gap: 10px; /* Отступы между кнопками */
+    gap: 10px; 
 }
 
 .auth-button {
