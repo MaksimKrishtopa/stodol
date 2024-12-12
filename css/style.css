@@ -3,15 +3,18 @@
 
 body {
     font-family: "Roboto", sans-serif; 
+    background-image: url(/img/zzzz.png);
+    background-color: rgba(255,255,255,0.86);
+    background-blend-mode: lighten;
 }
 
 h1 {
     text-align: center;
     margin: 20px 0;
-    color: #333;
+    color: #4e7eb9;
     font-size: 36px;
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: 700 !important;
 }
 
 .task-form {
@@ -45,14 +48,25 @@ h1 {
     margin: 5px;
     padding: 10px;
     width: 300px;
-    border: 1px solid #ccc;
+    border: 2px solid #abb1bcb0;
     border-radius: 5px;
     text-wrap: wrap;
+    background-color: #fff;
+    color: #4e7eb9;
 }
 
 .task-form button {
-    color: #343434;
+    color: #fff;
     cursor: pointer;
+    background-color: #7d9ec5;
+    padding: 15px;
+    font-weight: 500;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.task-form button:hover {
+    background-color: #7a90ab;
 }
 
 .board {
@@ -67,10 +81,10 @@ h1 {
 
 .column {
     background-color: white;
-    border: 1px solid #ccc;
+    border: 2px solid #abb1bcb0;
     border-radius: 5px;
     width: 100%;
-    padding: 10px;
+    padding: 15px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
     flex-wrap: wrap;
@@ -80,7 +94,8 @@ h1 {
 
 .column h2 {
     text-align: center;
-    color: #333;
+    color: #4e7eb9;
+    font-weight: 500;
 }
 
 .tasks {
@@ -89,6 +104,7 @@ h1 {
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    padding-top: 20px;
 }
 
 .task {
@@ -96,11 +112,11 @@ h1 {
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
-    border: 1px solid #ccc;
+    border: 1px solid #abb1bc;
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 10px;
-    background-color: #f9f9f9;
+    color: #4e7eb9;
     max-width: 350px;
     height: 175px; 
     overflow: hidden; 
@@ -130,6 +146,7 @@ h1 {
     cursor: pointer;
     border: 1px solid #ccc;
     border-radius: 4px;
+    color: #4e7eb9;
     background-color: #e0e0e0;
     transition: background-color 0.3s;
 }
@@ -200,8 +217,7 @@ h1 {
     padding: 0;      
     margin: 0;      
     font-size: 18px;  
-    cursor: pointer;  
-    color: #616161;     
+    cursor: pointer;      
 }
 
 .task__btns button:hover {
@@ -222,9 +238,8 @@ h1 {
 }
 
 .task.important {
-    background-color: #fff8a6;
-    border-color: #ffd700;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    border: 2px solid #abb1bc;
+    box-shadow: 0 0 10px rgb(149 114 255);
 }
 
 .important-button {
@@ -282,8 +297,8 @@ h1 {
     justify-content: space-between; 
     align-items: center; 
     padding: 10px 20px; 
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #ccc; 
+    /* background-color: #f9f9f9;
+    border-bottom: 1px solid #ccc;  */
 }
 
 .auth-buttons {
@@ -295,7 +310,7 @@ h1 {
     padding: 10px 15px;
     font-size: 14px;
     color: #fff;
-    background-color: #5cb85c;
+    background-color: #7d9ec5;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -303,6 +318,6 @@ h1 {
 }
 
 .auth-button:hover {
-    background-color: #4cae4c;
+    background-color: #7a90ab;
 }
 
