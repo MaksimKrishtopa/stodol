@@ -52,6 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
 
+
+
     // Загрузка задач
     function loadTasks() {
         if (!currentUser) return;
@@ -59,13 +61,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.email}`)) || [];
         tasks.forEach(task => {
             const taskElement = createTask(task.name, task.description, task.startTime, task.endTime, task.status);
+            // Проверка на просроченность
+            const currentTime = new Date();
+            const taskEndTime = new Date(task.endTime);
+            if (taskEndTime < currentTime && task.status !== "completed") {
+                taskElement.classList.add("overdue");
+            }
+    
             if (task.status === "completed") {
                 completedColumn.appendChild(taskElement);
             } else {
                 plannedColumn.appendChild(taskElement);
             }
-
-            // Восстанавливаем состояние "важности" для задачи
+    
             if (task.important) {
                 taskElement.classList.add("important");
             }
@@ -94,7 +102,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-
+    function checkOverdueTasks() {
+        const allTasks = document.querySelectorAll("#planned .task");
+        const currentTime = new Date();
+    
+        allTasks.forEach(task => {
+            const endTime = new Date(task.querySelector(".task__date").dataset.endTime);
+            if (endTime < currentTime) {
+                task.classList.add("overdue");
+            }
+        });
+    
+        saveTasks(); // Обновляем состояние в localStorage
+    }
+    
+    // Проверка просроченных задач каждую минуту
+    setInterval(checkOverdueTasks, 60000);
 
     function createTask(name, description, startTime, endTime, status) {
         const task = document.createElement("div");
@@ -114,6 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
         taskDateElem.textContent = `${formatDateTime(startTime)} - ${formatDateTime(endTime)}`;
         taskDateElem.dataset.startTime = startTime;
         taskDateElem.dataset.endTime = endTime;
+
+        // Проверка на просрочку
+        const currentTime = new Date();
+        const taskEndTime = new Date(endTime);
+        if (taskEndTime < currentTime && status !== "completed") {
+            task.classList.add("overdue");
+        }
     
         taskText.append(taskNameElem, taskDescriptionElem, taskDateElem);
     
@@ -160,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     
         moveButton.addEventListener("click", () => {
+            task.classList.remove("overdue"); // Снимаем подсветку при завершении
             task.classList.remove("important");
             moveButton.remove();
             importantButton.style.display = "none";
