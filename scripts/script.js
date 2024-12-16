@@ -52,26 +52,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
 
-    // Загрузка задач
     function loadTasks() {
         if (!currentUser) return;
-
+    
         const tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.email}`)) || [];
         tasks.forEach(task => {
             const taskElement = createTask(task.name, task.description, task.startTime, task.endTime, task.status);
+            
+            // Проверка на просроченность
+            const currentTime = new Date();
+            const taskEndTime = new Date(task.endTime);
+            if (taskEndTime < currentTime && task.status !== "completed") {
+                taskElement.classList.add("overdue");
+            }
+    
             if (task.status === "completed") {
                 completedColumn.appendChild(taskElement);
             } else {
                 plannedColumn.appendChild(taskElement);
             }
-
-            // Восстанавливаем состояние "важности" для задачи
+    
             if (task.important) {
                 taskElement.classList.add("important");
             }
         });
     }
-
     // Сохранение задач в localStorage
     function saveTasks() {
         if (!currentUser) return;
@@ -93,33 +98,56 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem(`tasks_${currentUser.email}`, JSON.stringify(tasks));
     }
 
-
+    function checkOverdueTasks() {
+        const allTasks = document.querySelectorAll("#planned .task");
+        const currentTime = new Date();
+    
+        allTasks.forEach(task => {
+            const endTime = new Date(task.querySelector(".task__date").dataset.endTime);
+            if (endTime < currentTime) {
+                task.classList.add("overdue");
+            }
+        });
+    
+        saveTasks(); // Обновляем состояние в localStorage
+    }
+    
+    // Проверка просроченных задач каждую минуту
+    setInterval(checkOverdueTasks, 60000);
 
 
     function createTask(name, description, startTime, endTime, status) {
         const task = document.createElement("div");
         task.className = "task";
-    
+        
         const taskText = document.createElement("div");
         taskText.className = "task__text";
-    
+        
         const taskNameElem = document.createElement("p");
         taskNameElem.textContent = name;
-    
+        
         const taskDescriptionElem = document.createElement("p");
         taskDescriptionElem.textContent = description;
-    
+        
         const taskDateElem = document.createElement("p");
         taskDateElem.className = "task__date";
         taskDateElem.textContent = `${formatDateTime(startTime)} - ${formatDateTime(endTime)}`;
         taskDateElem.dataset.startTime = startTime;
         taskDateElem.dataset.endTime = endTime;
     
+        // Проверка на просрочку
+        const currentTime = new Date();
+        const taskEndTime = new Date(endTime);
+        if (taskEndTime < currentTime && status !== "completed") {
+            task.classList.add("overdue");
+        }
+    
         taskText.append(taskNameElem, taskDescriptionElem, taskDateElem);
     
         const taskBtns = document.createElement("div");
         taskBtns.className = "task__btns";
     
+        // Кнопки управления
         const importantButton = document.createElement("button");
         importantButton.className = "important-button";
         importantButton.innerHTML = "★";
@@ -136,44 +164,14 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteButton.className = "delete-button";
         deleteButton.innerHTML = "✕";
     
-        const moreButton = document.createElement("button");
-        moreButton.textContent = "Подробнее";
-        moreButton.className = "task__more-button";
-    
-        if (status === "completed") {
-            taskBtns.append(deleteButton);
-        } else {
-            taskBtns.append(importantButton, moveButton, editButton, deleteButton, moreButton);
-        }
-    
+        taskBtns.append(importantButton, moveButton, editButton, deleteButton);
         task.append(taskText, taskBtns);
     
-        // Обработчик кнопки "Подробнее"
-        moreButton.addEventListener("click", () => {
-            showTaskDetails(name, description, startTime, endTime);
-        });
-    
-        importantButton.addEventListener("click", () => {
-            task.classList.toggle("important");
-            saveTasks();
-        });
-    
+        // Обработчики событий
         moveButton.addEventListener("click", () => {
-            task.classList.remove("important");
-            moveButton.remove();
-            importantButton.style.display = "none";
-            editButton.remove();
+            task.classList.remove("overdue"); // Снимаем подсветку при завершении
             completedColumn.appendChild(task);
             saveTasks();
-        });
-    
-        editButton.addEventListener("click", () => {
-            currentTask = task;
-            editName.value = name;
-            editDescription.value = description;
-            editStartTime.value = startTime;
-            editEndTime.value = endTime;
-            editModal.style.display = "block";
         });
     
         deleteButton.addEventListener("click", () => {
@@ -183,7 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
         return task;
     }
-    
 // Обработчик закрытия модального окна по крестику
 closeEditModal.addEventListener("click", () => {
     editModal.style.display = "none";
