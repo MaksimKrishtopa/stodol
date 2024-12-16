@@ -28,6 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const editDescription = document.getElementById("editDescription");
     const editStartTime = document.getElementById("editStartTime");
     const editEndTime = document.getElementById("editEndTime");
+    const taskModal = document.getElementById("taskModal"); 
+    const taskModalContent = document.getElementById("taskModalContent"); 
+    const closeEditModal = document.getElementById("closeEditModal");
+    
+    
     let currentTask = null;
 
     let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
@@ -88,6 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem(`tasks_${currentUser.email}`, JSON.stringify(tasks));
     }
 
+
+
+
     function createTask(name, description, startTime, endTime, status) {
         const task = document.createElement("div");
         task.className = "task";
@@ -104,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const taskDateElem = document.createElement("p");
         taskDateElem.className = "task__date";
         taskDateElem.textContent = `${formatDateTime(startTime)} - ${formatDateTime(endTime)}`;
-    
         taskDateElem.dataset.startTime = startTime;
         taskDateElem.dataset.endTime = endTime;
     
@@ -129,29 +136,37 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteButton.className = "delete-button";
         deleteButton.innerHTML = "✕";
     
+        const moreButton = document.createElement("button");
+        moreButton.textContent = "Подробнее";
+        moreButton.className = "task__more-button";
+    
         if (status === "completed") {
             taskBtns.append(deleteButton);
         } else {
-            taskBtns.append(importantButton, moveButton, editButton, deleteButton);
+            taskBtns.append(importantButton, moveButton, editButton, deleteButton, moreButton);
         }
-
+    
         task.append(taskText, taskBtns);
-
+    
+        // Обработчик кнопки "Подробнее"
+        moreButton.addEventListener("click", () => {
+            showTaskDetails(name, description, startTime, endTime);
+        });
+    
         importantButton.addEventListener("click", () => {
             task.classList.toggle("important");
             saveTasks();
         });
-
+    
         moveButton.addEventListener("click", () => {
             task.classList.remove("important");
-            importantButton.style.display = "none";
             moveButton.remove();
+            importantButton.style.display = "none";
             editButton.remove();
             completedColumn.appendChild(task);
             saveTasks();
         });
-
-        // Редактирование задачи
+    
         editButton.addEventListener("click", () => {
             currentTask = task;
             editName.value = name;
@@ -160,46 +175,64 @@ document.addEventListener("DOMContentLoaded", () => {
             editEndTime.value = endTime;
             editModal.style.display = "block";
         });
-
+    
         deleteButton.addEventListener("click", () => {
             task.remove();
             saveTasks();
         });
-
+    
         return task;
     }
+    
+// Обработчик закрытия модального окна по крестику
+closeEditModal.addEventListener("click", () => {
+    editModal.style.display = "none";
+});
 
-    // Обработчик сохранения изменений в редактировании задачи
-    editForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-    
-        const updatedName = editName.value;
-        const updatedDescription = editDescription.value;
-        const updatedStartTime = editStartTime.value;
-        const updatedEndTime = editEndTime.value;
-    
-        // Валидация дат
-        if (new Date(updatedStartTime) > new Date(updatedEndTime)) {
-            alert("Дата начала выполнения не может быть позже даты окончания выполнения!");
-            return;
-        }
-    
-        const updatedTask = {
-            name: updatedName,
-            description: updatedDescription,
-            startTime: updatedStartTime,
-            endTime: updatedEndTime,
-        };
-    
-        currentTask.querySelector(".task__text p:first-child").textContent = updatedTask.name;
-        currentTask.querySelector(".task__text p:nth-child(2)").textContent = updatedTask.description;
-        currentTask.querySelector(".task__date").textContent = `${formatDateTime(updatedTask.startTime)} - ${formatDateTime(updatedTask.endTime)}`;
-        currentTask.querySelector(".task__date").dataset.startTime = updatedTask.startTime;
-        currentTask.querySelector(".task__date").dataset.endTime = updatedTask.endTime;
-    
+// Обработчик сохранения изменений в редактировании задачи
+editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const updatedName = editName.value;
+    const updatedDescription = editDescription.value;
+    const updatedStartTime = editStartTime.value;
+    const updatedEndTime = editEndTime.value;
+
+    // Валидация дат
+    if (new Date(updatedStartTime) > new Date(updatedEndTime)) {
+        alert("Дата начала выполнения не может быть позже даты окончания выполнения!");
+        return;
+    }
+
+    const updatedTask = {
+        name: updatedName,
+        description: updatedDescription,
+        startTime: updatedStartTime,
+        endTime: updatedEndTime,
+    };
+
+    currentTask.querySelector(".task__text p:first-child").textContent = updatedTask.name;
+    currentTask.querySelector(".task__text p:nth-child(2)").textContent = updatedTask.description;
+    currentTask.querySelector(".task__date").textContent = `${formatDateTime(updatedTask.startTime)} - ${formatDateTime(updatedTask.endTime)}`;
+    currentTask.querySelector(".task__date").dataset.startTime = updatedTask.startTime;
+    currentTask.querySelector(".task__date").dataset.endTime = updatedTask.endTime;
+
+    editModal.style.display = "none";
+
+    saveTasks();
+});
+
+// Обработчик закрытия модального окна при клике вне его
+window.addEventListener("click", (e) => {
+    if (e.target === editModal) {
         editModal.style.display = "none";
-    
-        saveTasks();
+    }
+});
+
+    window.addEventListener("click", (e) => {
+        if (e.target === editModal) {
+            editModal.style.display = "none";
+        }
     });
 
     // Обработчики модальных окон
@@ -284,6 +317,34 @@ document.addEventListener("DOMContentLoaded", () => {
         // Очистить текущие задачи
         plannedColumn.innerHTML = '';
         completedColumn.innerHTML = '';
+    });
+
+
+
+    function showTaskDetails(name, description, startTime, endTime) {
+        // Вставляем содержимое модального окна
+        taskModalContent.innerHTML = `
+            <span id="closeTaskModal" class="close">&times;</span>
+            <h2><strong>Название:</strong> ${name}</h2>
+            <p><strong>Описание:</strong> ${description}</p>
+            <p><strong>Дата:</strong> ${formatDateTime(startTime)} - ${formatDateTime(endTime)}</p>
+        `;
+        taskModal.style.display = "block";
+    
+        // Назначаем обработчик для крестика после вставки innerHTML
+        const closeTaskModal = document.getElementById("closeTaskModal");
+        closeTaskModal.addEventListener("click", () => {
+            taskModal.style.display = "none";
+        });
+    }
+
+
+    
+    // Закрытие модального окна при клике вне его содержимого
+    window.addEventListener("click", (e) => {
+        if (e.target === taskModal) {
+            taskModal.style.display = "none";
+        }
     });
 
     // Добавление задачи

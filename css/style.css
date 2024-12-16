@@ -291,8 +291,7 @@ h1 {
     justify-content: space-between; 
     align-items: center; 
     padding: 10px 20px; 
-    /* background-color: #f9f9f9;
-    border-bottom: 1px solid #ccc;  */
+
 }
 
 .auth-buttons {
@@ -315,3 +314,28 @@ h1 {
     background-color: #7a90ab;
 }
 
+
+.task__more-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 20px !important;
+
+}
+
+
+
+.modal-content {
+
+    word-wrap: break-word; /* предотвращает выход текста за рамки */
+}
+
+
+.task.overdue {
+    background-color: #ffcccc; /* светло-красный фон */
+    border: 1px solid #ff0000; /* красная рамка */
+}
