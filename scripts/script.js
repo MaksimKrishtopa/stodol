@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
         moreButton.className = "task__more-button";
     
         if (status === "completed") {
-            taskBtns.append(deleteButton);
+            taskBtns.append(deleteButton, moreButton);
         } else {
             taskBtns.append(importantButton, moveButton, editButton, deleteButton, moreButton);
         }
@@ -151,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Обработчик кнопки "Подробнее"
         moreButton.addEventListener("click", () => {
             showTaskDetails(name, description, startTime, endTime);
+            saveTasks();
         });
     
         importantButton.addEventListener("click", () => {
@@ -330,14 +331,13 @@ window.addEventListener("click", (e) => {
             <p><strong>Дата:</strong> ${formatDateTime(startTime)} - ${formatDateTime(endTime)}</p>
         `;
         taskModal.style.display = "block";
-    
+        
         // Назначаем обработчик для крестика после вставки innerHTML
         const closeTaskModal = document.getElementById("closeTaskModal");
         closeTaskModal.addEventListener("click", () => {
             taskModal.style.display = "none";
         });
     }
-
 
     
     // Закрытие модального окна при клике вне его содержимого
