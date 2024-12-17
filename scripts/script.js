@@ -221,7 +221,6 @@ closeEditModal.addEventListener("click", () => {
     editModal.style.display = "none";
 });
 
-// Обработчик сохранения изменений в редактировании задачи
 editForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -243,11 +242,19 @@ editForm.addEventListener("submit", (e) => {
         endTime: updatedEndTime,
     };
 
+    // Обновляем текущие данные задачи
     currentTask.querySelector(".task__text p:first-child").textContent = updatedTask.name;
     currentTask.querySelector(".task__text p:nth-child(2)").textContent = updatedTask.description;
     currentTask.querySelector(".task__date").textContent = `${formatDateTime(updatedTask.startTime)} - ${formatDateTime(updatedTask.endTime)}`;
     currentTask.querySelector(".task__date").dataset.startTime = updatedTask.startTime;
     currentTask.querySelector(".task__date").dataset.endTime = updatedTask.endTime;
+
+    // Обновляем данные для moreButton
+    const moreButton = currentTask.querySelector(".task__more-button");
+    moreButton.addEventListener("click", () => {
+        showTaskDetails(updatedTask.name, updatedTask.description, updatedTask.startTime, updatedTask.endTime);
+        saveTasks();
+    });
 
     editModal.style.display = "none";
 
