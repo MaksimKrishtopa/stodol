@@ -339,3 +339,10 @@ h1 {
     background-color: #ffcccc; /* светло-красный фон */
     border: 1px solid #ff0000; /* красная рамка */
 }
+
+
+.clear-button {
+    color: #7d9ec5;
+    font-size: 16px;
+    font-weight: 600;
+}

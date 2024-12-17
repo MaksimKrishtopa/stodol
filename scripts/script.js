@@ -52,7 +52,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
 
+        // Функция для очистки задач в колонке
+    function clearTasks(columnId) {
+        const column = document.getElementById(columnId).querySelector(".tasks");
+        column.innerHTML = ""; // Удалить все задачи
+        saveTasks(); // Обновить localStorage
+    }
 
+    // Добавляем обработчики для кнопок очистки
+    const clearPlannedButton = document.getElementById("clearPlanned");
+    const clearCompletedButton = document.getElementById("clearCompleted");
+
+    clearPlannedButton.addEventListener("click", () => {
+        clearTasks("planned");
+    });
+
+    clearCompletedButton.addEventListener("click", () => {
+        clearTasks("completed");
+    });
 
     // Загрузка задач
     function loadTasks() {
