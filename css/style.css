@@ -193,14 +193,15 @@ h1 {
 }
 
 #editForm button {
-    background-color: #5cb85c;
+    background-color: #7d9ec5;
     color: white;
     border: none;
     cursor: pointer;
+    transition: .3s;
 }
 
 #editForm button:hover {
-    background-color: #4cae4c;
+    background-color: #4d6a8e;
 }
 
 
